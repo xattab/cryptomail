@@ -1,16 +1,8 @@
-# Cryptoletter
-
-This is a simple Python script to send an encrypted email to a list of recipients.
-In case you need a moderately secure way to keep a number of people informed about
-a project.
-
 # Install
 
 You need two dependencies:
 
     # pip install gnupg pysocks
-
-Obviously if you need it, install Tor.
 
 # Usage
 
