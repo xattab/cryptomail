@@ -1,0 +1,8 @@
+host: mail.syneforge.com
+port: 587
+user: xattab@syneforge.com
+from: testgpg@syneforge.com
+recipients:
+    - xattab@syneforge.com
+    - test@syneforge.com
+    - mh@syneforge.com
