@@ -62,6 +62,7 @@ class Email(object):
         msg['From'] =  CFG['from']
         msg['To'] = self.recipient
         msg['Date'] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
+        msg['Content-Type'] = 'text/html; charset=ascii';
 
         # Connect to the SMTP server.
         self.connect()
