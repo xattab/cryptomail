@@ -11,10 +11,14 @@ import smtplib
 import datetime
 import argparse
 import gnupg._parsers
+import io
 from email.mime.text import MIMEText
+from email.header import Header
+from email.mime.multipart import MIMEMultipart
+
 gnupg._parsers.Verify.TRUST_LEVELS["ENCRYPTION_COMPLIANCE_MODE"] = 23
 
-# This will contain the parsed YAML config.
+# Parsed YAML config.
 CFG = None
 
 class Email(object):
@@ -27,10 +31,8 @@ class Email(object):
         self.body = body
 
     def connect(self):
-        #  SMTP connections throw Tor.
-    #    if CFG['tor']:
-    #        socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 9050, True)
-    #        socks.wrapmodule(smtplib)
+        #  SMTP connections
+
 
 
         self.smtp = smtplib.SMTP(CFG['host'], CFG['port'])
@@ -57,12 +59,12 @@ class Email(object):
         encrypted_body = str(encrypted_data)
 
         # Setup MIME message.
-        msg = MIMEText(encrypted_body)
+        msg = MIMEText(encrypted_body, "plain", "utf-8")
         msg['Subject'] = self.subject
         msg['From'] =  CFG['from']
         msg['To'] = self.recipient
-        msg['Date'] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
-        msg['Content-Type'] = 'text/html; charset=ascii';
+        #msg['Date'] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
+
 
         # Connect to the SMTP server.
         self.connect()
@@ -82,15 +84,10 @@ class Scheduler(object):
 
         # Get headers and message body.
         headers_raw, body = data.split("\n\n", 1)
-        # The header should mostly just contain the subject for now.
-        # Example:
-        #
-        # Subject: This is the email subject
-        #
-        # This is the email body.
+
         headers = yaml.load(headers_raw)
 
-        # We send an encrypted email for each recipient specified in the
+        # Send an encrypted email for each recipient specified in the
         # configuration file.
         for recipient in CFG['recipients']:
             print("Sending to " + recipient)
